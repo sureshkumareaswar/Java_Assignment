@@ -3,6 +3,7 @@ package com.example.Java_.Assignment.DAO;
 import com.example.Java_.Assignment.model.CurrencyRate;
 import com.example.Java_.Assignment.repository.CurrencyRateRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * Implementation of the CurrencyRateDAO interface.
  */
+@Slf4j
 @AllArgsConstructor
 @Repository
 public class CurrencyRateDAOImpl implements CurrencyRateDAO {
@@ -25,6 +27,7 @@ public class CurrencyRateDAOImpl implements CurrencyRateDAO {
      */
     @Override
     public CurrencyRate findRate(String sourceCurrency, String targetCurrency) {
+        log.info("Fetching currency rate for sourceCurrency={} and targetCurrency={}", sourceCurrency, targetCurrency);
         Optional<CurrencyRate> rate = repository.findBySourceCurrencyAndTargetCurrency(sourceCurrency, targetCurrency);
         return rate.filter(r -> r.getLastUpdated().isAfter(LocalDateTime.now().minusHours(1))).orElse(null);
     }
@@ -36,6 +39,8 @@ public class CurrencyRateDAOImpl implements CurrencyRateDAO {
      */
     @Override
     public void saveRate(CurrencyRate currencyRate) {
+        log.info("Saving currency rate to database: {}", currencyRate);
         repository.save(currencyRate);
+        log.info("Currency rate saved successfully: {}", currencyRate);
     }
 }

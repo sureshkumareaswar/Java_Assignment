@@ -1,5 +1,7 @@
 package com.example.Java_.Assignment.controller;
 
+import com.example.Java_.Assignment.exceptionHandler.CurrencyConversionException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import com.example.Java_.Assignment.model.response.CurrencyConversionResponse;
 import com.example.Java_.Assignment.model.response.CurrencyDropdownItem;
@@ -13,9 +15,10 @@ import java.util.List;
 /**
  * Controller for handling currency conversion requests.
  */
+@Slf4j
 @AllArgsConstructor
 @RestController
-    @RequestMapping("/currency")
+@RequestMapping("/currency")
 public class CurrencyController {
     private final CurrencyService currencyService;
 
@@ -31,6 +34,17 @@ public class CurrencyController {
     public CurrencyConversionResponse convertCurrency(@RequestParam String sourceCurrency,
                                                       @RequestParam String targetCurrency,
                                                       @RequestParam Integer amount) {
-        return currencyService.convert(sourceCurrency, targetCurrency, amount);
+        log.info("Received currency conversion request: sourceCurrency={}, targetCurrency={}, amount={}",
+                sourceCurrency, targetCurrency, amount);
+        try {
+            CurrencyConversionResponse response = currencyService.convert(sourceCurrency, targetCurrency, amount);
+            log.info("Conversion successful: sourceCurrency={}, targetCurrency={}, amount={}, response={}",
+                    sourceCurrency, targetCurrency, amount, response);
+            return response;
+        } catch (CurrencyConversionException ex) {
+            log.error("Error during currency conversion: sourceCurrency={}, targetCurrency={}, amount={}, error={}",
+                    sourceCurrency, targetCurrency, amount, ex.getMessage(), ex);
+            throw ex;
+        }
     }
 }

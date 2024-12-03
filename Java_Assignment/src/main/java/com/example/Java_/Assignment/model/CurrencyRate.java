@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
-@Table(name = "currency_rates")
+@Table(name = "currency_rate")
 public class CurrencyRate {
 
     @Id

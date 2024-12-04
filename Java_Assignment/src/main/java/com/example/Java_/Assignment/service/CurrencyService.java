@@ -10,5 +10,4 @@ import java.util.List;
  */
 public interface CurrencyService {
     CurrencyConversionResponse convert(String sourceCurrency, String targetCurrency, Integer amount);
-//    List<CurrencyDropdownItem> getAllCurrencies();
 }

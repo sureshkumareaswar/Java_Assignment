@@ -74,8 +74,3 @@ public class CurrencyServiceImpl implements CurrencyService {
         return rate;
     }
 }
-//    public List<CurrencyDropdownItem> getAllCurrencies() {
-//        return Stream.of("USD", "EUR", "INR", "GBP")
-//                .map(currencyCode -> new CurrencyDropdownItem(currencyCode, getCurrencyDisplayName(currencyCode)))
-//                .collect(Collectors.toList());
-//    }

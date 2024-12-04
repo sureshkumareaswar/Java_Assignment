@@ -2,6 +2,7 @@ package com.example.Java_.Assignment.DAO;
 
 import com.example.Java_.Assignment.model.CurrencyRate;
 import com.example.Java_.Assignment.repository.CurrencyRateRepository;
+import com.example.Java_.Assignment.service.CurrencyRateCleanupService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @Repository
 public class CurrencyRateDAOImpl implements CurrencyRateDAO {
     private final CurrencyRateRepository repository;
+    private final CurrencyRateCleanupService cleanupService;
 
     /**
      * Finds a currency rate by source and target currencies.
@@ -28,6 +30,7 @@ public class CurrencyRateDAOImpl implements CurrencyRateDAO {
     @Override
     public CurrencyRate findRate(String sourceCurrency, String targetCurrency) {
         log.info("Fetching currency rate for sourceCurrency={} and targetCurrency={}", sourceCurrency, targetCurrency);
+        cleanupService.deleteExpiredRates();
         Optional<CurrencyRate> rate = repository.findBySourceCurrencyAndTargetCurrency(sourceCurrency, targetCurrency);
         return rate.filter(r -> r.getLastUpdated().isAfter(LocalDateTime.now().minusHours(1))).orElse(null);
     }
